@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSCENARIO>
+   <FileHeader revMajor="1"
+               revMinor="1"
+               date="2020-10-02T10:00:00"
+               description="Pedestrian involved in a critical situation"
+               author="esmini-team"/>
+   <ParameterDeclarations>
+      <ParameterDeclaration name="HostVehicle" parameterType="string" value="car_white"/>
+      <ParameterDeclaration name="ParkVehicle" parameterType="string" value="car_red"/>
+      <ParameterDeclaration name="HostSpeed" parameterType="double" value="10"/>
+      <ParameterDeclaration name="PedestrianSpeed" parameterType="double" value="1.5"/>
+   </ParameterDeclarations>
+   <CatalogLocations>
+      <RouteCatalog>
+         <Directory path="../xosc/Catalogs/Routes"/>
+      </RouteCatalog>
+      <VehicleCatalog>
+         <Directory path="../xosc/Catalogs/Vehicles"/>
+      </VehicleCatalog>
+   </CatalogLocations>
+   <RoadNetwork>
+      <LogicFile filepath="../xodr/fabriksgatan.xodr"/>
+      <SceneGraphFile filepath="../models/fabriksgatan.osgb"/>
+   </RoadNetwork>
+   <Entities>
+      <ScenarioObject name="Ego">
+         <CatalogReference catalogName="VehicleCatalog" entryName="$HostVehicle"/>
+      </ScenarioObject>
+      <ScenarioObject name="ParkedCar1">
+         <CatalogReference catalogName="VehicleCatalog" entryName="$ParkVehicle"/>
+         <InitialPlacement laneId="-1.5" s="40" offset="-0.5" heading="0"/>
+      </ScenarioObject>
+      <ScenarioObject name="ParkedCar2">
+         <CatalogReference catalogName="VehicleCatalog" entryName="$ParkVehicle"/>
+         <InitialPlacement laneId="-1.5" s="30" offset="-0.5" heading="0"/>
+      </ScenarioObject>
+      <ScenarioObject name="pedestrian_adult">
+         <Pedestrian mass="80" model="EPTa" name="pedestrian_adult" pedestrianCategory="pedestrian" model3d="../models/walkman.osgb">
+            <ParameterDeclarations/>
+            <BoundingBox>
+               <Center x="0.06" y="0.0" z="0.923"/>
+               <Dimensions height="1.8" length="0.6" width="0.5"/>
+            </BoundingBox>
+            <Properties>
+               <!-- Scale modes: None, BBToModel, ModelToBB -->
+               <Property name="scaleMode" value="BBToModel"/>
+            </Properties>
+         </Pedestrian>
+      </ScenarioObject>
+   </Entities>
+   <Storyboard>
+      <!-- Init actions for placing entities -->
+      <Init>
+         <Actions>
+            <!-- Actions for the ego vehicle -->
+            <Private entityRef="Ego">
+               <!-- Routing and teleporting ego vehicle -->
+               <PrivateAction>
+                  <RoutingAction>
+                     <AssignRouteAction>
+                        <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
+                     </AssignRouteAction>
+                  </RoutingAction>
+               </PrivateAction>
+               <PrivateAction>
+                  <TeleportAction>
+                     <Position>
+                        <RoutePosition>
+                           <RouteRef>
+                              <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
+                           </RouteRef>
+                           <InRoutePosition>
+                              <FromLaneCoordinates pathS="0" laneId="1"/>
+                           </InRoutePosition>
+                        </RoutePosition>
+                     </Position>
+                  </TeleportAction>
+               </PrivateAction>
+               <!-- Setting speed for ego vehicle -->
+               <PrivateAction>
+                  <LongitudinalAction>
+                     <SpeedAction>
+                        <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                        <SpeedActionTarget>
+                           <AbsoluteTargetSpeed value="$HostSpeed"/>
+                        </SpeedActionTarget>
+                     </SpeedAction>
+                  </LongitudinalAction>
+               </PrivateAction>
+            </Private>
+            <!-- Actions for the parked cars -->
+            <Private entityRef="ParkedCar1">
+               <!-- Assigning route and teleporting parked car 1 -->
+               <PrivateAction>
+                  <RoutingAction>
+                     <AssignRouteAction>
+                        <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
+                     </AssignRouteAction>
+                  </RoutingAction>
+               </PrivateAction>
+               <PrivateAction>
+                  <TeleportAction>
+                     <Position>
+                        <LanePosition roadId="0" laneId="-1.5" offset="-0.5" s="10"/>
+                        <RoutePosition>
+                           <RouteRef>
+                              <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
+                           </RouteRef>
+                           <InRoutePosition>
+                              <FromLaneCoordinates pathS="0" laneId="1"/>
+                           </InRoutePosition>
+                        </RoutePosition>
+                     </Position>
+                  </TeleportAction>
+               </PrivateAction>
+            </Private>
+            <Private entityRef="ParkedCar2">
+               <!-- Assigning route and teleporting parked car 2 -->
+               <PrivateAction>
+                  <RoutingAction>
+                     <AssignRouteAction>
+                        <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
+                     </AssignRouteAction>
+                  </RoutingAction>
+               </PrivateAction>
+               <PrivateAction>
+                  <TeleportAction>
+                     <Position>
+                        <LanePosition roadId="0" laneId="-1.5" offset="-0.5" s="20"/>
+                        <RoutePosition>
+                           <RouteRef>
+                              <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
+                           </RouteRef>
+                           <InRoutePosition>
+                              <FromLaneCoordinates pathS="0" laneId="1"/>
+                           </InRoutePosition>
+                        </RoutePosition>
+                     </Position>
+                  </TeleportAction>
+               </PrivateAction>
+            </Private>
+            <!-- Action for placing the pedestrian -->
+            <Private entityRef="pedestrian_adult">
+               <!-- Teleporting pedestrian to desired position -->
+               <PrivateAction>
+                  <TeleportAction>
+                     <Position>
+                        <LanePosition laneId="-3" offset="-0.5" roadId="0" s="11" >
+                           <Orientation type="relative" h="0" p="0" r="0" />
+                        </LanePosition>
+                     </Position>
+                  </TeleportAction>
+               </PrivateAction>
+               <!-- Defining path for pedestrian to walk -->
+               <PrivateAction>
+                  <RoutingAction>
+                     <FollowTrajectoryAction>
+                        <Trajectory name="pedestrian_path" closed="False">
+                           <Shape>
+                              <Polyline>
+                                 <Vertex>
+                                    <Position>
+                                       <LanePosition roadId="0" laneId="-3" offset="-0.5" s="11"/>
+                                    </Position>
+                                 </Vertex>
+                                 <Vertex>
+                                    <Position>
+                                       <LanePosition roadId="0" laneId="-3" offset="-0.5" s="9"/>
+                                    </Position>
+                                 </Vertex>
+                                 <Vertex>
+                                    <Position>
+                                       <LanePosition roadId="0" laneId="-3" offset="-0.5" s="7"/>
+                                    </Position>
+                                 </Vertex>
+                              </Polyline>
+                           </Shape>
+                        </Trajectory>
+                        <TimeReference>
+                           <None/>
+                        </TimeReference>
+                        <TrajectoryFollowingMode followingMode="follow"/>
+                     </FollowTrajectoryAction>
+                  </RoutingAction>
+               </PrivateAction>
+            </Private>
+         </Actions>
+      </Init>
+      <!-- Defining action to make the ego car stop near the parked car when the pedestrian is nearby -->
+      <Story name="StopNearParkedCars">
+         <Act name="StopAct">
+            <ManeuverGroup maximumExecutionCount="1" name="stop_maneuver">
+               <Actors selectTriggeringEntities="True">
+                  <EntityRef entityRef="Ego"/>
+                  <EntityRef entityRef="pedestrian_adult"/>
+               </Actors>
+               <Maneuver name="stop_near_parked_cars">
+                  <Event maximumExecutionCount="1" name="stop_event" priority="overwrite">
+                     <Action name="stop_action">
+                        <PrivateAction>
+                           <LongitudinalAction>
+                              <SpeedAction>
+                                 <SpeedActionDynamics dynamicsShape="linear" value="-5" dynamicsDimension="rate"/>
+                                 <SpeedActionTarget>
+                                    <AbsoluteTargetSpeed value="0"/>
+                                 </SpeedActionTarget>
+                              </SpeedAction>
+                           </LongitudinalAction>
+                        </PrivateAction>
+                     </Action>
+                     <StartTrigger>
+                        <ConditionGroup>
+                           <Condition name="stop_condition" delay="0" conditionEdge="rising">
+                              <ByEntityCondition>
+                                 <TriggeringEntities triggeringEntitiesRule="all">
+                                    <EntityRef entityRef="Ego"/>
+                                    <EntityRef entityRef="pedestrian_adult"/>
+                                 </TriggeringEntities>
+                                 <EntityCondition>
+                                    <DistanceCondition value="15" freespace="true" coordinatSystem="road" relativeDistanceType="longitudinal" rule="lessThan">
+                                       <Position>
+                                          <LanePosition roadId="0" laneId="-1.5" offset="-0.5" s="4"/>
+                                       </Position>
+                                    </DistanceCondition>
+                                 </EntityCondition>
+                              </ByEntityCondition>
+                           </Condition>
+                        </ConditionGroup>
+                     </StartTrigger>
+                  </Event>
+               </Maneuver>
+            </ManeuverGroup>
+         </Act>
+      </Story>
+   </Storyboard>
+</OpenSCENARIO>
+

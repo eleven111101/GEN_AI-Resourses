@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AEB (Automatic Emergency Braking) - Pedestrian Scenario -->
+<OpenSCENARIO>
+    <FileHeader revMajor="1"
+                revMinor="0"
+                date="2024-02-02T10:00:00"
+                description="AEB Pedestrian Scenario"
+                author="YourName"/>
+    
+    <!-- Parameter Declarations -->
+    <ParameterDeclarations>
+        <ParameterDeclaration name="HostVehicle" parameterType="string" value="car_white"/>
+        <ParameterDeclaration name="Pedestrian" parameterType="string" value="pedestrian_adult"/>
+        <ParameterDeclaration name="HostSpeed" parameterType="double" value="20"/>
+        <ParameterDeclaration name="PedestrianSpeed" parameterType="double" value="4"/>
+    </ParameterDeclarations>
+
+    <!-- Catalog Locations -->
+    <CatalogLocations>
+        <VehicleCatalog>
+            <Directory path="../xosc/Catalogs/Vehicles"/>
+        </VehicleCatalog>
+        <PedestrianCatalog>
+            <Directory path="../xosc/Catalogs/Pedestrians"/>
+        </PedestrianCatalog>
+    </CatalogLocations>
+
+    <!-- Road Network and Entities -->
+    <RoadNetwork>
+        <!-- Include your road network logic file here -->
+        <LogicFile filepath="../xodr/fabriksgatan.xodr"/>
+      <SceneGraphFile filepath="../models/fabriksgatan.osgb"/>
+    </RoadNetwork>
+
+    <Entities>
+        <ScenarioObject name="Ego">
+            <CatalogReference catalogName="VehicleCatalog" entryName="$HostVehicle"/>
+        </ScenarioObject>
+        <ScenarioObject name="Pedestrian">
+            <CatalogReference catalogName="PedestrianCatalog" entryName="$Pedestrian"/>
+        </ScenarioObject>
+        <!-- Add objects for parked vehicles if needed -->
+    </Entities>
+
+    <!-- Storyboard -->
+    <Storyboard>
+        <Init>
+            <Actions>
+                <Private entityRef="Ego">
+                    <!-- Initial setup for the host vehicle -->
+                    <PrivateAction>
+                        <LongitudinalAction>
+                            <SpeedAction>
+                                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time"/>
+                                <SpeedActionTarget>
+                                    <AbsoluteTargetSpeed value="$HostSpeed"/>
+                                </SpeedActionTarget>
+                            </SpeedAction>
+                        </LongitudinalAction>
+                    </PrivateAction>
+                </Private>
+                <Private entityRef="Pedestrian">
+                    <!-- Initial setup for the pedestrian -->
+                    <PrivateAction>
+                        <LongitudinalAction>
+                            <SpeedAction>
+                                <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="rate"/>
+                                <SpeedActionTarget>
+                                    <AbsoluteTargetSpeed value="$PedestrianSpeed"/>
+                                </SpeedActionTarget>
+                            </SpeedAction>
+                        </LongitudinalAction>
+                    </PrivateAction>
+                </Private>
+                <!-- Add actions for parked vehicles if needed -->
+            </Actions>
+        </Init>
+
+        <Story name="AEB_Pedestrian_Scenario">
+            <ParameterDeclarations>
+                <ParameterDeclaration parameterType="string" name="owner" value="Ego"/>
+            </ParameterDeclarations>
+            <Act name="AEB_Act">
+                <ManeuverGroup name="AEB_ManeuverGroup" maximumExecutionCount="1">
+                    <Actors selectTriggeringEntities="false">
+                        <EntityRef entityRef="$owner"/>
+                    </Actors>
+                    <Maneuver name="AEB_Maneuver">
+                        <Event name="AEB_Event" maximumExecutionCount="1">
+                            <!-- AEB Trigger Condition -->
+                            <StartTrigger>
+                                <ConditionGroup>
+                                    <Condition name="AEB_TriggerCondition" delay="0" conditionEdge="rising">
+                                        <ByEntityCondition>
+                                            <TriggeringEntities triggeringEntitiesRule="any">
+                                                <EntityRef entityRef="Pedestrian"/>
+                                            </TriggeringEntities>
+                                            <EntityCondition>
+                                                <!-- Define a condition to trigger AEB -->
+                                                <!-- For example, a distance-based condition -->
+                                                <DistanceCondition value="10"/>
+                                            </EntityCondition>
+                                        </ByEntityCondition>
+                                    </Condition>
+                                </ConditionGroup>
+                            </StartTrigger>
+
+                            <!-- AEB Action -->
+                            <Action name="AEB_Action">
+                                <PrivateAction>
+                                    <LongitudinalAction>
+                                        <SpeedAction>
+                                            <SpeedActionDynamics dynamicsShape="linear" value="-5" dynamicsDimension="rate"/>
+                                            <SpeedActionTarget>
+                                                <AbsoluteTargetSpeed value="0"/>
+                                            </SpeedActionTarget>
+                                        </SpeedAction>
+                                    </LongitudinalAction>
+                                </PrivateAction>
+                            </Action>
+                        </Event>
+                    </Maneuver>
+                </ManeuverGroup>
+                <StartTrigger>
+                    <!-- AEB Act Start Trigger -->
+                    <ConditionGroup>
+                        <Condition name="AEB_ActStartCondition" delay="0" conditionEdge="rising">
+                            <ByValueCondition>
+                                <SimulationTimeCondition value="0" rule="greaterThan"/>
+                            </ByValueCondition>
+                        </Condition>
+                    </ConditionGroup>
+                </StartTrigger>
+            </Act>
+        </Story>
+
+        <!-- Stop Trigger (You can customize based on your specific criteria) -->
+        <StopTrigger>
+            <ConditionGroup>
+                <Condition name="QuitCondition" delay="10" conditionEdge="rising">
+                    <ByValueCondition>
+                        <SimulationTimeCondition rule="greaterThan" value="10"/>
+                    </ByValueCondition>
+                </Condition>
+            </ConditionGroup>
+        </StopTrigger>
+    </Storyboard>
+</OpenSCENARIO>
+

@@ -1,0 +1,65 @@
+As A professional Software engineer,  Identify runtime checks in following code according to polyspace code prover. Without changing the functionality of code, resolve the checks and re-write the code. Also comment on the change part.float matrix[4][4];
+  void Function1()
+  {
+      int ipv;
+      int pivArray = 0;
+      int i, j;
+     int Array[4];
+      int colNum;
+      float maxNum;
+      float inv_pivot;
+     float temp;
+     for (ipv = 0; ipv < 4; ipv++) {
+         maxNum = 0;
+         for (i = ipv; i < 4; i++) {
+             if (fabs(matrix[i][ipv]) > maxNum) {
+                 maxNum = fabs(matrix[i][ipv]);
+                 pivArray = i;
+             }
+             else {
+                 /* No Action */
+             }
+         }
+         if (maxNum != 0) {
+             Array[ipv] = pivArray;
+             if (ipv != pivArray) {
+                 for (i = 0; i < 4; i++) {
+                     temp = matrix[ipv][i];
+                     matrix[ipv][i] = matrix[pivArray][i];
+                     matrix[pivArray][i] = temp;
+                 }
+             }
+             inv_pivot = (1.f) / matrix[ipv][ipv];
+             matrix[ipv][ipv] = 1;
+             for (j = 0; j < 4; j++) {
+                 matrix[ipv][j] *= inv_pivot;
+             }
+             for (i = 0; i < 5; i++) {
+                 if (i != ipv) {
+                     temp = matrix[i][ipv];
+                     matrix[i][ipv] = (0.f);
+                     for (j = 0; j < 4; j++) {
+                         matrix[i][j] = temp * matrix[ipv][j];
+                     }
+                 }
+             }
+         }
+         else {
+             Array[ipv] = 0;
+         }
+     }
+     for (j = 4; j > 0; j--) {
+         colNum = j - 1;
+         if (colNum != Array[colNum]) {
+             for (i = 0; i < 4; i++) {
+                 temp = matrix[i][colNum];
+                 matrix[i][colNum] = matrix[i][Array[colNum]];
+                 matrix[i][Array[colNum]] = temp;
+             }
+         }
+         else {
+             /* No Action */
+         }
+     }
+ }
+
