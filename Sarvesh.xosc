@@ -2,15 +2,22 @@
 <OpenSCENARIO xmlns="http://www.asam.net/xml/scenario">
   <FileHeader revMajor="1" revMinor="1" date="2020-10-02T10:00:00" description="Pedestrian Crossing Scenario" author="Your Name"/>
   <ParameterDeclarations>
-    <!-- Your parameter declarations remain unchanged -->
+      <ParameterDeclaration name="HostVehicle" parameterType="string" value="car_white"/>
+      <ParameterDeclaration name="ParkVehicle" parameterType="string" value="car_red"/>
+      <ParameterDeclaration name="HostSpeed" parameterType="double" value="10"/>
+      <ParameterDeclaration name="PedestrianSpeed" parameterType="double" value="1.5"/>
   </ParameterDeclarations>
   <CatalogLocations>
-    <!-- Your catalog locations remain unchanged -->
+     <RouteCatalog>
+         <Directory path="../xosc/Catalogs/Routes"/>
+      </RouteCatalog>
+      <VehicleCatalog>
+         <Directory path="../xosc/Catalogs/Vehicles"/>
+      </VehicleCatalog>
   </CatalogLocations>
   <RoadNetwork>
-    <!-- Your road network definition remains unchanged -->
-
-    <!-- Define a single lane road with a crosswalk -->
+      <LogicFile filepath="../xodr/fabriksgatan.xodr"/>
+      <SceneGraphFile filepath="../models/fabriksgatan.osgb"/>
     <Logics>
       <LaneLogics>
         <LaneID>1</LaneID>
