@@ -27,13 +27,11 @@
       <ScenarioObject name="Ego">
          <CatalogReference catalogName="VehicleCatalog" entryName="$HostVehicle"/>
       </ScenarioObject>
-      <ScenarioObject name="ParkedCar1">
+      <ScenarioObject name="Parked1">
          <CatalogReference catalogName="VehicleCatalog" entryName="$ParkVehicle"/>
-         <InitialPlacement laneId="-1.5" s="40" offset="-0.5" heading="0"/>
       </ScenarioObject>
-      <ScenarioObject name="ParkedCar2">
+      <ScenarioObject name="Parked2">
          <CatalogReference catalogName="VehicleCatalog" entryName="$ParkVehicle"/>
-         <InitialPlacement laneId="-1.5" s="30" offset="-0.5" heading="0"/>
       </ScenarioObject>
       <ScenarioObject name="pedestrian_adult">
          <Pedestrian mass="80" model="EPTa" name="pedestrian_adult" pedestrianCategory="pedestrian" model3d="../models/walkman.osgb">
@@ -50,12 +48,10 @@
       </ScenarioObject>
    </Entities>
    <Storyboard>
-      <!-- Init actions for placing entities -->
       <Init>
          <Actions>
-            <!-- Actions for the ego vehicle -->
             <Private entityRef="Ego">
-               <!-- Routing and teleporting ego vehicle -->
+               <!-- Actions for the ego vehicle -->
                <PrivateAction>
                   <RoutingAction>
                      <AssignRouteAction>
@@ -77,7 +73,6 @@
                      </Position>
                   </TeleportAction>
                </PrivateAction>
-               <!-- Setting speed for ego vehicle -->
                <PrivateAction>
                   <LongitudinalAction>
                      <SpeedAction>
@@ -89,9 +84,8 @@
                   </LongitudinalAction>
                </PrivateAction>
             </Private>
-            <!-- Actions for the parked cars -->
-            <Private entityRef="ParkedCar1">
-               <!-- Assigning route and teleporting parked car 1 -->
+            <Private entityRef="Parked1">
+               <!-- Actions for parked car 1 -->
                <PrivateAction>
                   <RoutingAction>
                      <AssignRouteAction>
@@ -102,21 +96,21 @@
                <PrivateAction>
                   <TeleportAction>
                      <Position>
-                        <LanePosition roadId="0" laneId="-1.5" offset="-0.5" s="10"/>
+                        <LanePosition roadId="0" laneId="-1" offset="0" s="13"/>
                         <RoutePosition>
                            <RouteRef>
                               <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
                            </RouteRef>
                            <InRoutePosition>
-                              <FromLaneCoordinates pathS="0" laneId="1"/>
+                              <FromLaneCoordinates pathS="0" laneId="-1"/>
                            </InRoutePosition>
                         </RoutePosition>
                      </Position>
                   </TeleportAction>
                </PrivateAction>
             </Private>
-            <Private entityRef="ParkedCar2">
-               <!-- Assigning route and teleporting parked car 2 -->
+            <Private entityRef="Parked2">
+               <!-- Actions for parked car 2 -->
                <PrivateAction>
                   <RoutingAction>
                      <AssignRouteAction>
@@ -127,22 +121,21 @@
                <PrivateAction>
                   <TeleportAction>
                      <Position>
-                        <LanePosition roadId="0" laneId="-1.5" offset="-0.5" s="20"/>
+                        <LanePosition roadId="0" laneId="-1" offset="0" s="20"/>
                         <RoutePosition>
                            <RouteRef>
                               <CatalogReference catalogName="RoutesAtFabriksgatan" entryName="HostStraightRoute"/>
                            </RouteRef>
                            <InRoutePosition>
-                              <FromLaneCoordinates pathS="0" laneId="1"/>
+                              <FromLaneCoordinates pathS="0" laneId="-1"/>
                            </InRoutePosition>
                         </RoutePosition>
                      </Position>
                   </TeleportAction>
                </PrivateAction>
             </Private>
-            <!-- Action for placing the pedestrian -->
             <Private entityRef="pedestrian_adult">
-               <!-- Teleporting pedestrian to desired position -->
+               <!-- Actions for the pedestrian -->
                <PrivateAction>
                   <TeleportAction>
                      <Position>
@@ -152,7 +145,6 @@
                      </Position>
                   </TeleportAction>
                </PrivateAction>
-               <!-- Defining path for pedestrian to walk -->
                <PrivateAction>
                   <RoutingAction>
                      <FollowTrajectoryAction>
@@ -161,17 +153,44 @@
                               <Polyline>
                                  <Vertex>
                                     <Position>
-                                       <LanePosition roadId="0" laneId="-3" offset="-0.5" s="11"/>
+                                       <LanePosition laneId="-3" offset="-0.5" roadId="0" s="10" >
+                                          <Orientation type="relative" h="3.14" p="0" r="0" />
+                                       </LanePosition>
                                     </Position>
                                  </Vertex>
                                  <Vertex>
                                     <Position>
-                                       <LanePosition roadId="0" laneId="-3" offset="-0.5" s="9"/>
+                                       <LanePosition laneId="-3" offset="-0.5" roadId="0" s="9.5" >
+                                          <Orientation type="relative" h="-3.14" p="0" r="0" />
+                                       </LanePosition>
                                     </Position>
                                  </Vertex>
                                  <Vertex>
                                     <Position>
-                                       <LanePosition roadId="0" laneId="-3" offset="-0.5" s="7"/>
+                                       <LanePosition laneId="-3" offset="0.0" roadId="0" s="8" >
+                                          <Orientation type="relative" h="1.57" p="0" r="0" />
+                                       </LanePosition>
+                                    </Position>
+                                 </Vertex>
+                                 <Vertex>
+                                    <Position>
+                                       <LanePosition laneId="3" offset="0.0" roadId="0" s="8" >
+                                          <Orientation type="relative" h="-1.57" p="0" r="0" />
+                                       </LanePosition>
+                                    </Position>
+                                 </Vertex>
+                                 <Vertex>
+                                    <Position>
+                                       <LanePosition laneId="3" offset="0.5" roadId="0" s="8.5" >
+                                          <Orientation type="relative" h="0" p="0" r="0" />
+                                       </LanePosition>
+                                    </Position>
+                                 </Vertex>
+                                 <Vertex>
+                                    <Position>
+                                       <LanePosition laneId="3" offset="0.5" roadId="0" s="15.5" >
+                                          <Orientation type="relative" h="-1" p="0" r="0" />
+                                       </LanePosition>
                                     </Position>
                                  </Vertex>
                               </Polyline>
@@ -187,21 +206,118 @@
             </Private>
          </Actions>
       </Init>
-      <!-- Defining action to make the ego car stop near the parked car when the pedestrian is nearby -->
-      <Story name="StopNearParkedCars">
-         <Act name="StopAct">
-            <ManeuverGroup maximumExecutionCount="1" name="stop_maneuver">
-               <Actors selectTriggeringEntities="True">
+      <Story name="ADAS_BRAKES">
+         <ParameterDeclarations>
+            <ParameterDeclaration parameterType="string" name="owner" value="NPC"/>
+         </ParameterDeclarations>
+         <Act name="ADAS_BRAKESAct">
+            <ManeuverGroup maximumExecutionCount="1" name="ped_mangroup">
+                <Actors selectTriggeringEntities="False">
+                    <EntityRef entityRef="pedestrian_adult"/>
+                </Actors>
+                <Maneuver name="ped_maneuver">
+                    <Event maximumExecutionCount="1" name="ped_event" priority="overwrite">
+                        <Action name="walk_speed">
+                            <PrivateAction>
+                               <LongitudinalAction>
+                                  <SpeedAction>
+                                     <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="rate" />
+                                     <SpeedActionTarget>
+                                        <AbsoluteTargetSpeed value="$PedestrianSpeed"/>
+                                     </SpeedActionTarget>
+                                  </SpeedAction>
+                               </LongitudinalAction>
+                            </PrivateAction>
+                        </Action>
+                        <Action name="walk_route">
+                            <PrivateAction>
+                                <RoutingAction>
+                                    <FollowTrajectoryAction>
+                                        <Trajectory closed="False" name="ped_traj">
+                                            <ParameterDeclarations/>
+                                            <Shape>
+                                                <Polyline>
+                                                    <Vertex>
+                                                        <Position>
+                                                            <LanePosition laneId="-3" offset="-0.5" roadId="0" s="11" >
+                                                                <Orientation type="relative" h="3.14" p="0" r="0" />
+                                                            </LanePosition>
+                                                        </Position>
+                                                    </Vertex>
+                                                    <Vertex>
+                                                        <Position>
+                                                            <LanePosition laneId="-3" offset="-0.5" roadId="0" s="10.5" >
+                                                                <Orientation type="relative" h="-3.14" p="0" r="0" />
+                                                            </LanePosition>
+                                                        </Position>
+                                                    </Vertex>
+                                                    <Vertex>
+                                                        <Position>
+                                                            <LanePosition laneId="-3" offset="0.0" roadId="0" s="10" >
+                                                                <Orientation type="relative" h="1.57" p="0" r="0" />
+                                                            </LanePosition>
+                                                        </Position>
+                                                    </Vertex>
+                                                    <Vertex>
+                                                        <Position>
+                                                            <LanePosition laneId="3" offset="0.0" roadId="0" s="10" >
+                                                                <Orientation type="relative" h="-1.57" p="0" r="0" />
+                                                            </LanePosition>
+                                                        </Position>
+                                                    </Vertex>
+                                                    <Vertex>
+                                                        <Position>
+                                                            <LanePosition laneId="3" offset="0.5" roadId="0" s="9.5" >
+                                                                <Orientation type="relative" h="0" p="0" r="0" />
+                                                            </LanePosition>
+                                                        </Position>
+                                                    </Vertex>
+                                                    <Vertex>
+                                                        <Position>
+                                                            <LanePosition laneId="3" offset="0.5" roadId="0" s="7.5" >
+                                                                <Orientation type="relative" h="0" p="0" r="0" />
+                                                            </LanePosition>
+                                                        </Position>
+                                                    </Vertex>
+                                                </Polyline>
+                                            </Shape>
+                                        </Trajectory>
+                                        <TimeReference>
+                                            <None/>
+                                        </TimeReference>
+                                        <TrajectoryFollowingMode followingMode="follow"/>
+                                    </FollowTrajectoryAction>
+                                </RoutingAction>
+                            </PrivateAction>
+                        </Action>
+                        <StartTrigger>
+                            <ConditionGroup>
+                                <Condition conditionEdge="rising" delay="0" name="ped_walk_event">
+                                    <ByEntityCondition>
+                                        <TriggeringEntities triggeringEntitiesRule="any">
+                                            <EntityRef entityRef="Ego"/>
+                                        </TriggeringEntities>
+                                        <EntityCondition>
+                                            <TraveledDistanceCondition value="5"/>
+                                        </EntityCondition>
+                                    </ByEntityCondition>
+                                </Condition>
+                            </ConditionGroup>
+                        </StartTrigger>
+                    </Event>
+                </Maneuver>
+            </ManeuverGroup>
+            <ManeuverGroup maximumExecutionCount="1" name="brake-for-ped_mangroup">
+               <Actors selectTriggeringEntities="false">
                   <EntityRef entityRef="Ego"/>
-                  <EntityRef entityRef="pedestrian_adult"/>
                </Actors>
-               <Maneuver name="stop_near_parked_cars">
-                  <Event maximumExecutionCount="1" name="stop_event" priority="overwrite">
-                     <Action name="stop_action">
+               <Maneuver name="brake_Maneuver">
+                  <Event name="brake_Event" priority="overwrite">
+                     <Action name="brake_Action">
                         <PrivateAction>
                            <LongitudinalAction>
                               <SpeedAction>
-                                 <SpeedActionDynamics dynamicsShape="linear" value="-5" dynamicsDimension="rate"/>
+                                 <SpeedActionDynamics dynamicsShape="linear" value="-5.1" dynamicsDimension="rate"/>
                                  <SpeedActionTarget>
                                     <AbsoluteTargetSpeed value="0"/>
                                  </SpeedActionTarget>
@@ -211,17 +327,20 @@
                      </Action>
                      <StartTrigger>
                         <ConditionGroup>
-                           <Condition name="stop_condition" delay="0" conditionEdge="rising">
+                           <Condition name="brake_Condition" delay="0" conditionEdge="rising">
                               <ByEntityCondition>
-                                 <TriggeringEntities triggeringEntitiesRule="all">
+                                 <TriggeringEntities triggeringEntitiesRule="any">
                                     <EntityRef entityRef="Ego"/>
-                                    <EntityRef entityRef="pedestrian_adult"/>
                                  </TriggeringEntities>
                                  <EntityCondition>
-                                    <DistanceCondition value="15" freespace="true" coordinatSystem="road" relativeDistanceType="longitudinal" rule="lessThan">
-                                       <Position>
-                                          <LanePosition roadId="0" laneId="-1.5" offset="-0.5" s="4"/>
-                                       </Position>
+                                    <DistanceCondition value="11"
+                                                         freespace="true"
+                                                         coordinatSystem="road"
+                                                         relativeDistanceType="longitudinal"
+                                                         rule="lessThan" >
+                                        <Position >
+                                            <LanePosition laneId="3" offset="0.0" roadId="0" s="10" />
+                                        </Position>
                                     </DistanceCondition>
                                  </EntityCondition>
                               </ByEntityCondition>
@@ -231,8 +350,16 @@
                   </Event>
                </Maneuver>
             </ManeuverGroup>
+            <StartTrigger>
+               <ConditionGroup>
+                  <Condition name="ActStartCondition" delay="0" conditionEdge="none">
+                     <ByValueCondition>
+                        <SimulationTimeCondition value="0" rule="greaterThan"/>
+                     </ByValueCondition>
+                  </Condition>
+               </ConditionGroup>
+            </StartTrigger>
          </Act>
       </Story>
    </Storyboard>
 </OpenSCENARIO>
-
